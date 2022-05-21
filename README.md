@@ -1,5 +1,7 @@
 # Chronic pain in HIV
 
+[![DOI](https://zenodo.org/badge/493971379.svg)](https://zenodo.org/badge/latestdoi/493971379)
+
 Analysis scripts for a study investigating the prevalence of chronic pain in the South African population according to HIV status.
 
 All data are available through the DHS Program website (https://dhsprogram.com/data/dataset/South-Africa_Standard-DHS_2016.cfm)
