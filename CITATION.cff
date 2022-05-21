@@ -3,7 +3,7 @@ authors:
 - family-names: "Kamerman"
   given-names: "Peter"
 title: "hiv-pain-SADHS2016"
-version: 1.0.0
-doi: 10.5281/zenodo.1234
-date-released: 2022-05-19
+version: 1.1
+doi: 10.5281/zenodo.6569043
+date-released: 2022-05-21
 url: "https://github.com/kamermanpr/hiv-pain-SADHS2016"
