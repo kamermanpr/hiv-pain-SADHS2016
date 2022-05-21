@@ -205,7 +205,8 @@ theme_set(new = theme_bw(base_size = 20) +
 
 
 #--- Pain now ---#
-pain_now_df <- data.frame(group = c('Pain: current', 'Pain: current'),
+pain_now_df <- data.frame(group = c('Pain (acute or chronic)', 
+                                    'Pain (acute or chronic)'),
                           status = c('HIV+', 'HIV-'),
                           estimate = c(100 * pain_now$pain_nowYes[[2]],
                                        100 * pain_now$pain_nowYes[[1]]),
@@ -223,14 +224,15 @@ ggplot(data = pain_now_df) +
         ymax = CI_upper) +
     geom_errorbar(width = 0.3) +
     geom_point(size = 7) +
-    labs(title = 'Currently has pain',
+    labs(title = 'Currently has pain (acute or chronic)',
          x = NULL,
          y = 'Prevalence (%)') +
     scale_y_continuous(limits = c(15, 35)) +
     scale_x_discrete(labels = c('HIV-negative', 'HIV-positive'))
 
 #--- Chronic pain ---#
-pain_chronic_df <- data.frame(group = c('Pain: chronic', 'Pain: chronic'),
+pain_chronic_df <- data.frame(group = c('Pain (chronic only)', 
+                                        'Pain (chronic only)'),
                               status = c('HIV+', 'HIV-'),
                               estimate = c(100 * pain_chronic$pain_chronicYes[[2]],
                                            100 * pain_chronic$pain_chronicYes[[1]]),
@@ -248,7 +250,7 @@ ggplot(data = pain_chronic_df) +
         ymax = CI_upper) +
     geom_errorbar(width = 0.3) +
     geom_point(size = 7) +
-    labs(title = 'Has chronic pain',
+    labs(title = 'Currently has pain (chronic only)',
          x = NULL,
          y = 'Prevalence (%)') +
     scale_y_continuous(limits = c(15, 25)) +
@@ -256,7 +258,7 @@ ggplot(data = pain_chronic_df) +
 
 #--- Combined plot ---#
 pain_combined_df <- bind_rows(pain_now_df, pain_chronic_df) %>% 
-    mutate(group = relevel(factor(group), ref = 'Pain: current'))
+    mutate(group = relevel(factor(group), ref = 'Pain (acute or chronic)'))
 
 pain_combined_df
 
