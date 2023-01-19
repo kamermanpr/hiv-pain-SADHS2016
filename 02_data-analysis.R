@@ -10,6 +10,7 @@ library(tibble)
 library(tidyr)
 library(readr)
 library(survey)
+library(svyVGAM)
 library(parameters)
 library(ggplot2)
 library(patchwork)
@@ -18,6 +19,10 @@ library(patchwork)
 data <- read_csv('data_clean/data.csv') %>% 
     mutate(HIV_status = factor(HIV_status),
            age_category = factor(age_category),
+           wealth_index = factor(wealth_index,
+                                 levels = c('Poorest', 'Poorer', 'Middle', 
+                                            'Richer', 'Richest'),
+                                 ordered = TRUE),
            sex = factor(sex),
            pain_now = factor(pain_now),
            pain_chronic = factor(pain_chronic),
@@ -55,11 +60,9 @@ confint(sex)
 
 # Get mean age 
 age <- svyquantile(~age_years, design = design_HIV, 
-                   quantiles = 0.5)
+                   quantiles = c(0.25, 0.5, 0.75))
 
 age
-
-confint(age)
 
 # Get pain (current)
 pain_now <- svymean(~pain_now, design = design_HIV)
@@ -109,6 +112,21 @@ confint(hiv_age)
 svyboxplot(age_years ~ HIV_status, design = design_HIV)
 
 model_parameters(svyglm(age_years ~ HIV_status, design = design_HIV))
+
+# Get wealth index ~ HIV status
+hiv_wealth <- svyby(~wealth_index,
+                    by = ~HIV_status,
+                    FUN = svymean,
+                    design = design_HIV)
+
+hiv_wealth
+
+confint(hiv_wealth)
+
+plot(t(svytable(~wealth_index + HIV_status, design = design_HIV)))
+
+model_parameters(svy_vglm(wealth_index ~ HIV_status, design = design_HIV, family = propodds()),
+                 exponentiate = TRUE)
 
 ############################################################
 #                                                          #
@@ -188,6 +206,21 @@ pain_hiv_sex
 confint(pain_hiv_sex)
 
 model_parameters(svyglm(pain_chronic ~ HIV_status + sex, 
+                        family = quasibinomial(),
+                        design = design_HIV), 
+                 exponentiate = TRUE)
+
+#--- Prevalence of chronic pain by sex, wealth index, and HIV status ---#
+pain_hiv_sex_wealth <- svyby(~pain_chronic,
+                             by = ~HIV_status + sex + wealth_index,
+                             FUN = svymean,
+                             design = design_HIV)
+
+pain_hiv_sex_wealth
+
+confint(pain_hiv_sex_wealth)
+
+model_parameters(svyglm(pain_chronic ~ HIV_status + sex + wealth_index, 
                         family = quasibinomial(),
                         design = design_HIV), 
                  exponentiate = TRUE)
