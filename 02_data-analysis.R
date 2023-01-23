@@ -58,11 +58,18 @@ sex
 
 confint(sex)
 
-# Get mean age 
+# Get median IQR age 
 age <- svyquantile(~age_years, design = design_HIV, 
                    quantiles = c(0.25, 0.5, 0.75))
 
 age
+
+# Get mean age 
+age_mean <- svymean(~age_years, design = design_HIV)
+
+age_mean
+
+confint(age_mean)
 
 # Get pain (current)
 pain_now <- svymean(~pain_now, design = design_HIV)
